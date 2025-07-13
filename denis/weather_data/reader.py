@@ -1,4 +1,4 @@
 import pandas as pd
 
-df = pd.read_excel("target.xlsx")
-print(df.head(2))
+df = pd.read_excel("denis/weather_data/target.xlsx", sheet_name="data cleaned")
+states = df["state"].unique()

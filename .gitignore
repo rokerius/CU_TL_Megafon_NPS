@@ -13,6 +13,7 @@ venv/
 .env/
 .env.*
 .env
+env
 
 # Jupyter Notebook checkpoints
 .ipynb_checkpoints
@@ -22,3 +23,6 @@ venv/
 
 # Data files (если есть, можно исключить большие датасеты)
 data/
+cache
+target.xlsx
+
