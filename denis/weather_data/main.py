@@ -191,3 +191,4 @@ if __name__ == "__main__":
     print(categories)
     df_upgraded = create_new_weather_columns(df)
     print(df_upgraded)
+    
