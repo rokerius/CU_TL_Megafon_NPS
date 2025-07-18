@@ -33,7 +33,9 @@ def get_weather_monthly_stats(latitude: float, longitude: float,
 
     response = requests.get(url)
     if response.status_code != 200:
-        raise Exception(f"Ошибка запроса: {response.status_code}, {response.text}")
+        raise Exception(
+            f"Ошибка запроса: {response.status_code}, {response.text}"
+        )
 
     data = response.json()
     daily = data.get('daily', {})
@@ -85,7 +87,8 @@ def create_new_weather_columns(
             print(f"Cache file '{cache_path}' успешно загружен.")
             cache = pickle.load(f)
     else:
-        print(f"Cache file '{cache_path}' не найден или пустой, создаём новый кеш.")
+        print(f"Cache file '{cache_path}' не найден или пустой, "
+              "создаём новый кеш.")
 
     df_copy = df.copy()
 
