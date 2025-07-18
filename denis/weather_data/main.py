@@ -143,14 +143,13 @@ def create_new_weather_columns(
             temp_max_list.append(monthly_avg.get('temp_max', None))
             temp_min_list.append(monthly_avg.get('temp_min', None))
             precipitation_list.append(monthly_avg.get('precipitation', None))
-            wind_speed_max_list.append(monthly_avg.get('wind_speed_max', 
-                                                       None))
+            wind_speed_max_list.append(monthly_avg.get('wind_speed_max', None))
 
             humidity_max_list.append(monthly_avg.get('humidity_max', None))
             humidity_mean_list.append(monthly_avg.get('humidity_mean', None))
             cloudcover_list.append(monthly_avg.get('cloudcover', None))
-            solar_radiation_list.append(monthly_avg.get('solar_radiation', 
-                                                        None))
+            solar_radiation_list.append(
+                monthly_avg.get('solar_radiation', None))
             snowfall_list.append(monthly_avg.get('snowfall', None))
 
             for cat in categories:
