@@ -5,10 +5,11 @@ import calendar
 from tqdm import tqdm
 import time
 import os
-from config import categories, regions_coords    
+from config import categories, regions_coords
 
 
-def get_weather_monthly_stats(latitude: float, longitude: float, year: int, month: int):
+def get_weather_monthly_stats(latitude: float, longitude: float,
+                              year: int, month: int):
     prev_month = month - 1
     prev_year = year
     if prev_month == 0:
@@ -21,10 +22,12 @@ def get_weather_monthly_stats(latitude: float, longitude: float, year: int, mont
 
     url = (
         "https://archive-api.open-meteo.com/v1/archive?"
-        f"latitude={latitude}&longitude={longitude}"
-        f"&start_date={start_date}&end_date={end_date}"
-        "&daily=temperature_2m_max,temperature_2m_min,precipitation_sum,wind_speed_10m_max,weathercode,"
-        "relative_humidity_2m_max,relative_humidity_2m_mean,cloudcover_mean,shortwave_radiation_sum,snowfall_sum"
+        f"latitude={latitude}&longitude={longitude}&start_date={start_date}"
+        f"&end_date={end_date}"
+        "&daily=temperature_2m_max,temperature_2m_min,precipitation_sum,"
+        "wind_speed_10m_max,weathercode,"
+        "relative_humidity_2m_max,relative_humidity_2m_mean,cloudcover_mean,"
+        "shortwave_radiation_sum,snowfall_sum"
         "&timezone=Europe/Moscow"
     )
 
@@ -55,8 +58,11 @@ def get_weather_monthly_stats(latitude: float, longitude: float, year: int, mont
                 counts[category] += 1
                 break
 
-    monthly_avg = df[['temp_max', 'temp_min', 'precipitation', 'wind_speed_max',
-                      'humidity_max', 'humidity_mean', 'cloudcover', 'solar_radiation', 'snowfall']].mean().to_dict()
+    monthly_avg = df[
+        ['temp_max', 'temp_min', 'precipitation', 'wind_speed_max',
+         'humidity_max', 'humidity_mean', 'cloudcover', 'solar_radiation',
+         'snowfall']
+    ].mean().to_dict()
 
     result = {
         'monthly_avg': monthly_avg,
@@ -67,11 +73,11 @@ def get_weather_monthly_stats(latitude: float, longitude: float, year: int, mont
 
 
 def create_new_weather_columns(
-    df,
-    max_retries=3,
-    retry_delay=5,
-    succes_delay=0.02,
-    cache_path='denis/cache/weather_cache.pkl'
+        df,
+        max_retries=3,
+        retry_delay=5,
+        succes_delay=0.02,
+        cache_path='denis/cache/weather_cache.pkl'
 ):
     cache = {}
     if os.path.exists(cache_path) and os.path.getsize(cache_path) > 0:
@@ -80,7 +86,7 @@ def create_new_weather_columns(
             cache = pickle.load(f)
     else:
         print(f"Cache file '{cache_path}' не найден или пустой, создаём новый кеш.")
-    
+
     df_copy = df.copy()
 
     temp_max_list = []
@@ -96,7 +102,8 @@ def create_new_weather_columns(
 
     category_counts = {cat: [] for cat in categories}
 
-    for idx, row in tqdm(df_copy.iterrows(), total=len(df_copy), desc="Processing rows"):
+    for idx, row in tqdm(df_copy.iterrows(), total=len(df_copy),
+                         desc="Processing rows"):
         try:
             state = row['state']
             year = int(row['year'])
@@ -111,12 +118,17 @@ def create_new_weather_columns(
 
                 for attempt in range(max_retries):
                     try:
-                        weather_stats = get_weather_monthly_stats(latitude, longitude, year, month)
+                        weather_stats = get_weather_monthly_stats(
+                            latitude, longitude, year, month
+                        )
                         cache[key] = weather_stats
                         time.sleep(succes_delay)
                         break
                     except Exception as conn_err:
-                        print(f"Connection error on row {idx}, attempt {attempt+1}/{max_retries}: {conn_err}")
+                        print(
+                            f"Connection error on row {idx}, "
+                            f"attempt {attempt+1}/{max_retries}: {conn_err}"
+                        )
                         if attempt < max_retries - 1:
                             time.sleep(retry_delay)
                         else:
@@ -179,6 +191,8 @@ def create_new_weather_columns(
 
 if __name__ == "__main__":
     from reader import df
+
     print(categories)
+
     df_upgraded = create_new_weather_columns(df)
     print(df_upgraded)
