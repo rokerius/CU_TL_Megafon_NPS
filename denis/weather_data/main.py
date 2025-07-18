@@ -1,14 +1,11 @@
 import requests
 import pickle
-import json
 import pandas as pd
 import calendar
 from tqdm import tqdm
 import time
 import os
-
-from config import categories, regions_coords
-    
+from config import categories, regions_coords    
 
 
 def get_weather_monthly_stats(latitude: float, longitude: float, year: int, month: int):
@@ -68,11 +65,6 @@ def get_weather_monthly_stats(latitude: float, longitude: float, year: int, mont
 
     return result
 
-
-import os
-import time
-import pickle
-from tqdm import tqdm
 
 def create_new_weather_columns(
     df,
@@ -185,10 +177,8 @@ def create_new_weather_columns(
     return df_copy
 
 
-
 if __name__ == "__main__":
     from reader import df
     print(categories)
     df_upgraded = create_new_weather_columns(df)
     print(df_upgraded)
-    
