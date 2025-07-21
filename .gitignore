@@ -13,6 +13,10 @@ venv/
 .env/
 .env.*
 .env
+*.env
+vlad/config/*.env
+vlad/config/megafon-access.env
+vlad/config/.env
 
 # Jupyter Notebook checkpoints
 .ipynb_checkpoints
