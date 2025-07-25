@@ -165,7 +165,7 @@ def create_new_weather_columns(df,
                         break
                     except Exception as conn_err:
                         print(f"Ошибка {state} {year}-{month}, "
-                              f"попытка {attempt + 1}/{max_retries}:" 
+                              f"попытка {attempt + 1}/{max_retries}:"
                               f"{conn_err}")
                         if attempt < max_retries - 1:
                             time.sleep(retry_delay)
