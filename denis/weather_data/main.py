@@ -147,7 +147,8 @@ def create_new_weather_columns(df,
     for idx, row in tqdm(df_copy.iterrows(), total=len(df_copy),
                          desc="Processing rows"):
         try:
-            state, year, month = row['state'], int(row['year']), int(row['month'])
+            state = row['state']
+            year, month = int(row['year']), int(row['month'])
             key = (state, year, month)
 
             if key not in cache:
@@ -164,7 +165,8 @@ def create_new_weather_columns(df,
                         break
                     except Exception as conn_err:
                         print(f"Ошибка {state} {year}-{month}, "
-                              f"попытка {attempt + 1}/{max_retries}: {conn_err}")
+                              f"попытка {attempt + 1}/{max_retries}:" 
+                              f"{conn_err}")
                         if attempt < max_retries - 1:
                             time.sleep(retry_delay)
                         else:
