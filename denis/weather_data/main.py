@@ -10,9 +10,6 @@ from tqdm import tqdm
 from config import categories, regions_coords
 
 
-# ==============================
-#  DAILY WEATHER
-# ==============================
 def get_weather_daily_stats(latitude: float,
                             longitude: float,
                             start_date: str,
@@ -222,9 +219,6 @@ def create_new_weather_columns(df,
     return df_copy
 
 
-# ==============================
-#  EXPAND TO DAILY
-# ==============================
 def expand_df_to_daily(df,
                        regions_coords,
                        max_retries=5,
@@ -294,9 +288,6 @@ def expand_df_to_daily(df,
     return pd.concat(daily_dfs, ignore_index=True)
 
 
-# ==============================
-#  MAIN
-# ==============================
 if __name__ == "__main__":
     from reader import df
 
