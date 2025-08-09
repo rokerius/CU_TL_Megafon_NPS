@@ -13,6 +13,7 @@ dist/
 .env/
 .env.*
 .env
+env
 *.env
 vlad/config/*.env
 vlad/config/megafon-access.env
@@ -26,5 +27,6 @@ vlad/config/.env
 
 # Data files (если есть, можно исключить большие датасеты)
 data/
-
+cache
+target.xlsx
 .examps
