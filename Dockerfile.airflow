@@ -1,0 +1,45 @@
+FROM apache/airflow:3.0.2
+
+USER root
+
+# Установка системных зависимостей
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+    build-essential \
+    python3-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+# Создание директорий и установка прав
+RUN mkdir -p /opt/airflow && \
+    chown -R airflow:0 /opt/airflow && \
+    chmod -R g+w /opt/airflow
+
+# Копирование файлов с правильными правами
+COPY --chown=airflow:0 requirements.txt /opt/airflow/
+COPY --chown=airflow:0 setup.py /opt/airflow/
+
+USER airflow
+
+# Установка Python зависимостей
+RUN pip install --no-cache-dir --upgrade pip && \
+    pip install --no-cache-dir "boto3>=1.28.0" "botocore>=1.31.0" && \
+    pip install --no-cache-dir mlflow==2.10.2 mlflow-skinny==2.10.2 && \
+    pip install --no-cache-dir -r /opt/airflow/requirements.txt && \
+    pip install --no-cache-dir -e /opt/airflow
+
+WORKDIR /opt/airflow
+
+# Проверка установки airflow и mlflow
+RUN python -c "import airflow; print(airflow.__version__)" && \
+    python -c "import mlflow; print(mlflow.__version__)"
+
+# Установка переменных окружения
+ENV PYTHONPATH=/opt/airflow
+ENV AIRFLOW__CORE__LOAD_EXAMPLES=False
+ENV AIRFLOW__CORE__EXECUTOR=CeleryExecutor
+ENV AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:airflow@postgres/airflow
+ENV AIRFLOW__CORE__FERNET_KEY=46BKJoQYlPPOexq0OhDZnIlNepKFf87WFwLbfzqDDho=
+ENV AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION=True
+ENV AIRFLOW__CORE__ENABLE_XCOM_PICKLING=True
+ENV AIRFLOW__API__AUTH_BACKENDS=airflow.api.auth.backend.basic_auth
+ENV MLFLOW_TRACKING_URI=http://mlflow:5001 

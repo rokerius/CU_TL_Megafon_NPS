@@ -9,7 +9,7 @@ dist/
 *.egg-info/
 
 # Virtual environments
-venv/
+.venv
 .env/
 .env.*
 .env
@@ -26,3 +26,5 @@ vlad/config/.env
 
 # Data files (если есть, можно исключить большие датасеты)
 data/
+
+.examps
