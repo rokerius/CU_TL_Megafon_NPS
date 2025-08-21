@@ -1,0 +1,6 @@
+artifact_location: s3://megafon-nps/394577989974692568
+creation_time: 1755552502104
+experiment_id: '394577989974692568'
+last_update_time: 1755552502104
+lifecycle_stage: active
+name: NPS_Weather_RF_Regression

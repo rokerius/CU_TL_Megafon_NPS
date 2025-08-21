@@ -1,0 +1,14 @@
+artifact_uri: s3://megafon-nps/394577989974692568/0468ca1afa2c4d1db710c9cb2836469f/artifacts
+end_time: 1755552550552
+entry_point_name: ''
+experiment_id: '394577989974692568'
+lifecycle_stage: active
+run_id: 0468ca1afa2c4d1db710c9cb2836469f
+run_name: bustling-shrike-702
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1755552502869
+status: 4
+tags: []
+user_id: rokerius

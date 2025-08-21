@@ -7,7 +7,7 @@ import requests
 import pandas as pd
 from tqdm import tqdm
 
-from weather_data.config import categories, regions_coords
+from utils.config import categories, regions_coords
 
 
 def get_weather_daily_stats(latitude: float,

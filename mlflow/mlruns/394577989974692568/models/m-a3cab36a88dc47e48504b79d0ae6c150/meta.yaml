@@ -1,0 +1,10 @@
+artifact_location: s3://megafon-nps/394577989974692568/models/m-a3cab36a88dc47e48504b79d0ae6c150/artifacts
+creation_timestamp: 1755552529093
+experiment_id: '394577989974692568'
+last_updated_timestamp: 1755552550360
+model_id: m-a3cab36a88dc47e48504b79d0ae6c150
+model_type: ''
+name: model
+source_run_id: 0468ca1afa2c4d1db710c9cb2836469f
+status: 3
+status_message: null
