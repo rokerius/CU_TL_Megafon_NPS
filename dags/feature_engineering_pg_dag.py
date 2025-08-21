@@ -6,6 +6,7 @@ import pandas as pd
 import sqlite3
 from airflow.decorators import dag, task
 from utils.main import create_new_weather_columns
+from utils.denis.main import prepare_data
 
 DB_PATH = "/tmp/ml_features.db"
 
@@ -42,7 +43,7 @@ def D_feature_engineering_sqlite_dag():
     def transform(path: str) -> str:
         """Добавляем новый признак"""
         df = pd.read_csv(path)
-        df = create_new_weather_columns(df, cache_path='denis/cache/weather_cache.pkl')
+        df = prepare_data(df)
 
         out_path = "/tmp/megafon_nps_features.csv"
         df.to_csv(out_path, index=False)
