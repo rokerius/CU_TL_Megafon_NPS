@@ -6,9 +6,9 @@ import pandas as pd
 import sqlite3
 import s3fs
 from airflow.decorators import dag, task
-from utils.denis.main import prepare_data
+from src.utils.denis.main import prepare_data
 
-DB_PATH = "/tmp/ml_features.db"
+
 S3_BUCKET = "cu-mf-project"
 RAW_PATH = f"s3://{S3_BUCKET}/raw/target.xlsx"
 FEATURES_PATH = f"s3://{S3_BUCKET}/features/df_with_features_1.csv"
@@ -38,19 +38,13 @@ def D_feature_engineering_s3_dag():
     @task
     def transform(df: pd.DataFrame) -> pd.DataFrame:
         """Добавляем новые признаки"""
-        df_features = prepare_data(df[:10000])
+        df_features = prepare_data(df[:100])
         logging.info("Features calculated: shape=%s", df_features.shape)
         return df_features
 
     @task
     def load_and_inspect(df: pd.DataFrame):
-        """Сохраняем фичи в SQLite и в S3"""
-        # 1. SQLite (для отладки)
-        conn = sqlite3.connect(DB_PATH)
-        df.to_sql("megafon_nps", conn, if_exists="replace", index=False)
-        conn.close()
-        logging.info("Inserted %s rows into SQLite megafon_nps", len(df))
-
+        """Сохраняем фичи в S3"""
         # 2. S3
         fs = s3fs.S3FileSystem(client_kwargs={"endpoint_url": "https://storage.yandexcloud.net"})
         with fs.open(FEATURES_PATH, "w") as f:

@@ -1,11 +1,11 @@
 import pandas as pd
-from utils.denis.economic_data.parser import create_household_params
-from utils.denis.weather_data.main import create_new_weather_columns
+from src.utils.denis.economic_data.parser import create_household_params
+from src.utils.denis.weather_data.main import create_new_weather_columns
 
 
-def prepare_data(df_input):
+def prepare_data(df_input, weather_cache_path='cache/weather_cache.pkl'):
     df_result = create_household_params(df_input)
-    df_result = create_new_weather_columns(df_result)
+    df_result = create_new_weather_columns(df_result, cache_path=weather_cache_path)
     return df_result
 
 def main():

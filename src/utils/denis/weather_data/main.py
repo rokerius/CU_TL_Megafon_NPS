@@ -7,7 +7,7 @@ import requests
 import pandas as pd
 from tqdm import tqdm
 
-from utils.denis.weather_data.config import categories, regions_coords
+from src.utils.denis.weather_data.config import categories, regions_coords
 
 
 def get_weather_daily_stats(latitude: float,
@@ -200,7 +200,7 @@ def create_new_weather_columns(df,
     os.makedirs(os.path.dirname(cache_path), exist_ok=True)
     with open(cache_path, 'wb') as f:
         pickle.dump(cache, f)
-    print(f"Cache saved to {cache_path}")
+    print(f"Cache saved to {os.path.dirname(cache_path)}")
 
     # --- Добавление новых колонок ---
     df_copy['temp_max_avg'] = temp_max_list
@@ -283,7 +283,7 @@ def expand_df_to_daily(df,
     os.makedirs(os.path.dirname(cache_path), exist_ok=True)
     with open(cache_path, 'wb') as f:
         pickle.dump(cache, f)
-    print(f"Cache saved to {cache_path}")
+    print(f"Cache saved to {os.path.dirname(cache_path)}")
 
     return pd.concat(daily_dfs, ignore_index=True)
 

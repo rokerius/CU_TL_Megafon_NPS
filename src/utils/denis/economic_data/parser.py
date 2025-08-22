@@ -1,5 +1,5 @@
 import pandas as pd
-from utils.denis.economic_data.reader import df_long
+from src.utils.denis.economic_data.reader import df_long
 
 
 def create_household_params(df_input):
@@ -24,7 +24,6 @@ def create_household_params(df_input):
 
     pivot = closest.pivot(index="row_id", columns="Параметр", values="Значение")
 
-    # Шаг 7. Приклеиваем обратно к df_input
     df_result = pd.concat([df_input, pivot], axis=1)
     df_result.drop("target_date", axis=1, inplace=True)
     
