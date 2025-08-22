@@ -11,7 +11,7 @@ from datetime import datetime
 
 # DAG для логирования модели в MLflow
 @dag(start_date=datetime(2024, 1, 1), schedule="@daily", catchup=False)
-def D_feature_engineering_pg_dag():
+def D_mlflow_logging_dag():
     @task
     def train_and_log_model():
         # Заглушка данных
@@ -50,4 +50,4 @@ def D_feature_engineering_pg_dag():
     train_and_log_model()
 
 
-dag = D_feature_engineering_pg_dag()
+dag = D_mlflow_logging_dag()
