@@ -1,6 +1,6 @@
 import pandas as pd
-from economic_data.parser import create_household_params
-from weather_data.main import create_new_weather_columns
+from utils.denis.economic_data.parser import create_household_params
+from utils.denis.weather_data.main import create_new_weather_columns
 
 
 def prepare_data(df_input):

@@ -1,7 +1,7 @@
 import pandas as pd
 
 # Загружаем Excel
-df = pd.read_excel("data/households_b_3.xlsx", "Балансы")
+df = pd.read_excel("dags/data/households_b_3.xlsx", "Балансы")
 # начиная с 6-й строки (нумерация с 0)
 
 # Убираем пустые колонки

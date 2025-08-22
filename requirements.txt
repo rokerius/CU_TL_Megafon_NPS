@@ -7,3 +7,4 @@ s3fs==2024.2.0
 pandas
 numpy
 scikit-learn
+openpyxl

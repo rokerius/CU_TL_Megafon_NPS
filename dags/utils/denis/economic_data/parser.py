@@ -1,5 +1,5 @@
 import pandas as pd
-from economic_data.reader import df_long
+from utils.denis.economic_data.reader import df_long
 
 
 def create_household_params(df_input):
