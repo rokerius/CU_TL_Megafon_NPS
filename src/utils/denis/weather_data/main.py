@@ -121,7 +121,7 @@ def create_new_weather_columns(df,
                                max_retries=3,
                                retry_delay=5,
                                succes_delay=0.02,
-                               cache_path='denis/cache/weather_cache.pkl'
+                               cache_path='cache/weather_cache.pkl'
                                ) -> pd.DataFrame:
     """Добавляет в датафрейм новые столбцы со статистикой погоды."""
     cache = {}
@@ -294,5 +294,5 @@ if __name__ == "__main__":
     # df_upgraded = create_new_weather_columns(df)
     # print(df_upgraded)
 
-    expanded_df = expand_df_to_daily(df, regions_coords)
+    expanded_df = create_new_weather_columns(df, cache_path='cache/weather_cache.pkl')
     print(expanded_df.head(2))

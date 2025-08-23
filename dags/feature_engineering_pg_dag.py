@@ -38,7 +38,7 @@ def D_feature_engineering_s3_dag():
     @task
     def transform(df: pd.DataFrame) -> pd.DataFrame:
         """Добавляем новые признаки"""
-        df_features = prepare_data(df[:100])
+        df_features = prepare_data(df, weather_cache_path='cache/weather_cache.pkl')
         logging.info("Features calculated: shape=%s", df_features.shape)
         return df_features
 
