@@ -9,7 +9,8 @@ def prepare_data(df_input, weather_cache_path='cache/weather_cache.pkl'):
     print("economic data added!")
     df_input = create_new_weather_columns(df_input, cache_path=weather_cache_path)
     
-    # Сюда дальше можно вставлять доп функции
+    # СЮДА ВСТАВЛЯТЬ ОБРАБОТКУ ДАННЫХ!!!
+    
     return df_result
 
 def main():

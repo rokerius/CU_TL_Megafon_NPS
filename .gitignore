@@ -26,7 +26,4 @@ vlad/config/.env
 *.log
 
 # Data files (если есть, можно исключить большие датасеты)
-data/
-cache
-target.xlsx
 .examps
