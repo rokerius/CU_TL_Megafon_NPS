@@ -1,0 +1,14 @@
+artifact_uri: s3://cu-mf-project/472610743200043994/7b06462d77c44820b2dc3583cfbb5d44/artifacts
+end_time: 1756078882748
+entry_point_name: ''
+experiment_id: '472610743200043994'
+lifecycle_stage: active
+run_id: 7b06462d77c44820b2dc3583cfbb5d44
+run_name: delightful-bat-614
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1756078871222
+status: 3
+tags: []
+user_id: airflow

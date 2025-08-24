@@ -1,65 +1,112 @@
-# iris_ml_dag.py
-from __future__ import annotations
-import logging
-import pendulum
-from airflow.decorators import dag, task
+from airflow import DAG
+from airflow.decorators import task
+from airflow.models import Variable
 
+import pandas as pd
+import boto3
+import mlflow
+import mlflow.sklearn
 
-def _lazy_imports():
-    from sklearn.datasets import load_iris
-    from sklearn.linear_model import LogisticRegression
-    from sklearn.model_selection import train_test_split
-    from sklearn.metrics import accuracy_score
-    import pandas as pd
-    return {
-        "load_iris": load_iris,
-        "LogisticRegression": LogisticRegression,
-        "train_test_split": train_test_split,
-        "accuracy_score": accuracy_score,
-        "pd": pd,
-    }
+from pathlib import Path
+import numpy as np
+import os
+import joblib
+from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
 
+# ===== Defaults =====
+S3_BUCKET = Variable.get("s3_bucket", "cu-mf-project")
+TRAIN_PATH = Variable.get("train_path", f"s3://{S3_BUCKET}/features/train.csv")
+TEST_PATH = Variable.get("test_path", f"s3://{S3_BUCKET}/features/test.csv")
+MODEL_PATH = Variable.get("s3_model_key", "models/random_forest.pkl")
 
-@dag(
-    dag_id="iris_ml_pipeline",
-    start_date=pendulum.datetime(2024, 1, 1, tz="UTC"),
-    schedule=None,     # запускать вручную
+LOCAL_TRAIN_PATH = Variable.get("local_train_path", "/tmp/train.csv")
+LOCAL_TEST_PATH = Variable.get("local_test_path", "/tmp/test.csv")
+LOCAL_MODEL_PATH = Variable.get("local_model_path", "/tmp/model.pkl")
+
+MLFLOW_EXPERIMENT = Variable.get("mlflow_experiment_name", "default")
+MLFLOW_S3_ENDPOINT = Variable.get("mlflow_s3_endpoint", "https://storage.yandexcloud.net")
+
+# ===== DAG =====
+default_args = {"owner": "airflow", "depends_on_past": False}
+
+dag = DAG(
+    "mlflow_model_evaluation_regression",
+    default_args=default_args,
+    description="DAG for regression model evaluation and MLflow logging",
     catchup=False,
-    tags=["ml", "example"],
 )
-def D_iris_ml_pipeline():
 
-    @task
-    def load_data() -> dict:
-        mods = _lazy_imports()
-        iris = mods["load_iris"]()
-        X, y = iris.data, iris.target
-        logging.info("Loaded Iris dataset: X=%s, y=%s", X.shape, y.shape)
-        return {"X": X.tolist(), "y": y.tolist()}
+# ===== S3 Client =====
+def get_s3_client():
+    session = boto3.session.Session()
+    return session.client(
+        service_name="s3",
+        endpoint_url=MLFLOW_S3_ENDPOINT,
+        aws_access_key_id=os.environ["AWS_ACCESS_KEY_ID"],
+        aws_secret_access_key=os.environ["AWS_SECRET_ACCESS_KEY"],
+    )
 
-    @task
-    def train_and_evaluate(data: dict) -> dict:
-        mods = _lazy_imports()
-        pd = mods["pd"]
-
-        X = pd.DataFrame(data["X"])
-        y = pd.Series(data["y"])
-
-        X_train, X_test, y_train, y_test = mods["train_test_split"](
-            X, y, test_size=0.2, random_state=42, stratify=y
-        )
-
-        model = mods["LogisticRegression"](max_iter=200)
-        model.fit(X_train, y_train)
-
-        preds = model.predict(X_test)
-        acc = mods["accuracy_score"](y_test, preds)
-
-        logging.info("Test Accuracy: %.3f", acc)
-        return {"accuracy": acc}
-
-    data = load_data()
-    _ = train_and_evaluate(data)
+def download_from_s3(s3_uri: str, local_path: str):
+    s3 = get_s3_client()
+    bucket, key = s3_uri.replace("s3://", "").split("/", 1)
+    Path(local_path).parent.mkdir(parents=True, exist_ok=True)
+    s3.download_file(bucket, key, local_path)
+    print(f"Downloaded {s3_uri} to {local_path}")
 
 
-D_iris_ml_pipeline()
+# ===== Tasks =====
+@task(dag=dag)
+def download_datasets():
+    download_from_s3(TRAIN_PATH, LOCAL_TRAIN_PATH)
+    download_from_s3(TEST_PATH, LOCAL_TEST_PATH)
+    return {"train": LOCAL_TRAIN_PATH, "test": LOCAL_TEST_PATH}
+
+
+@task(dag=dag)
+def load_model():
+    download_from_s3(f"s3://{S3_BUCKET}/{MODEL_PATH}", LOCAL_MODEL_PATH)
+    print(f"Model downloaded to {LOCAL_MODEL_PATH}")
+    return LOCAL_MODEL_PATH
+
+
+@task(dag=dag)
+def predict_and_log(paths: dict, model_path: str):
+    # Загружаем модель (только joblib)
+    model = joblib.load(model_path)
+
+    results = {}
+    for split_name, path in paths.items():
+        df = pd.read_csv(path)
+
+        feature_cols = [col for col in df.columns if col not in ["start_date", "year", "month", "nps", "state"]]
+        X = df[feature_cols]
+        y = df["nps"]
+
+        y_pred = model.predict(X)
+
+        rmse = np.sqrt(mean_squared_error(y, y_pred))
+        mae = mean_absolute_error(y, y_pred)
+        r2 = r2_score(y, y_pred)
+
+        print(f"[{split_name.upper()}] RMSE: {rmse}, MAE: {mae}, R2: {r2}")
+        results[split_name] = {"rmse": rmse, "mae": mae, "r2": r2}
+
+    # MLflow logging
+    mlflow.set_tracking_uri("http://mlflow:5001")  # можно вынести в Variable
+    mlflow.set_experiment(MLFLOW_EXPERIMENT)
+
+    os.environ["MLFLOW_S3_ENDPOINT_URL"] = MLFLOW_S3_ENDPOINT
+
+    with mlflow.start_run():
+        for split, metrics in results.items():
+            for name, value in metrics.items():
+                mlflow.log_metric(f"{split}_{name}", value)
+        mlflow.sklearn.log_model(model, artifact_path="model")
+
+    return results
+
+
+# ===== Dependencies =====
+datasets = download_datasets()
+model_path = load_model()
+predict_and_log(datasets, model_path)
