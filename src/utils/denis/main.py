@@ -1,13 +1,15 @@
 import pandas as pd
-from src.utils.denis.economic_data.parser import create_household_params_fast
+from src.utils.denis.economic_data.parser import create_household_params_fast, create_potreb_prices_params
 from src.utils.denis.weather_data.main import create_new_weather_columns
-from src.utils.denis.economic_data.reader import df_long
+from src.utils.denis.economic_data.reader import df_households, potreb_prices
 
 
 def prepare_data(df_input, weather_cache_path='cache/weather_cache.pkl'):
-    df_result = create_household_params_fast(df_input, df_long)
+    df_input = create_household_params_fast(df_input, df_households)
+    df_input = create_potreb_prices_params(df_input, potreb_prices)
     print("economic data added!")
-    df_input = create_new_weather_columns(df_input, cache_path=weather_cache_path)
+    df_result = create_new_weather_columns(df_input, cache_path=weather_cache_path)
+    print("weather data added!")
     
     # СЮДА ВСТАВЛЯТЬ ОБРАБОТКУ ДАННЫХ!!!
     

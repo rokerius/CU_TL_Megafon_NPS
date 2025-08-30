@@ -1,7 +1,19 @@
 import pandas as pd
 
 
-def create_household_params_fast(df_input: pd.DataFrame, df_long: pd.DataFrame) -> pd.DataFrame:
+REGION_ALIASES = {
+    "Москва": "г. Москва",
+    "Санкт-Петербург": "г.Санкт-Петербург",
+    "Республика Северная Осетия - Алания": "Республика Северная Осетия\n - Алания",
+    "Ханты-Мансийский автономный округ - Югра": "Ханты-Мансийский авт.округ - Югра",
+    "Кемеровская область": "Кемеровская область - Кузбасс",
+    'Чувашская Республика - Чувашия': 'Чувашская Республика',
+    'Республика Татарстан (Татарстан)': 'Республика Татарстан'
+    
+}
+
+
+def create_household_params_fast(df_input: pd.DataFrame, df_households: pd.DataFrame) -> pd.DataFrame:
     df_input = df_input.copy()
     df_input = df_input.reset_index(drop=True)   # гарантируем чистую индексацию
     df_input["row_id"] = df_input.index          # сохраняем ID для связи
@@ -12,7 +24,7 @@ def create_household_params_fast(df_input: pd.DataFrame, df_long: pd.DataFrame) 
 
     results = []
 
-    for param, subset in df_long.groupby("Параметр"):
+    for param, subset in df_households.groupby("Параметр"):
         subset_sorted = subset.sort_values("Дата")
         merged = pd.merge_asof(
             df_input.sort_values("target_date"),
@@ -33,6 +45,51 @@ def create_household_params_fast(df_input: pd.DataFrame, df_long: pd.DataFrame) 
     df_out = df_out.merge(pivot, left_on="row_id", right_index=True)
     df_out = df_out.drop(columns=["row_id"])
     return df_out
+
+
+
+def get_potreb_info(year, month, region=None, code=None, potreb_prices=None):
+    df = potreb_prices.get(f"{month}/{year}")
+    if code is not None:
+        row = df[df["Код территории"] == code]
+    elif region is not None:
+        # нормализуем название
+        region_norm = REGION_ALIASES.get(region, region)
+        if region_norm == "г. Москва" and year == 2025:
+            region_norm = "г.Москва"
+        row = df[df["Наименование территории"].str.strip() == region_norm]
+
+        # на случай проблем с переносами строк и пробелами
+        if row.empty:
+            row = df[df["Наименование территории"].str.replace("\s+", " ", regex=True).str.strip() == region_norm]
+    else:
+        raise ValueError("Нужно указать либо 'region', либо 'code'")
+
+    if row.empty:
+        return None
+    
+    result = row.iloc[0].to_dict()
+    result.pop("Код территории", None)
+    result.pop("Наименование территории", None)
+    return result
+
+
+def create_potreb_prices_params(df_input, potreb_prices):
+    results = df_input.apply(
+        lambda row: get_potreb_info(
+            year=row["year"],
+            month=row["month"],
+            region=row.get("state", None),
+            code=row.get("code", None),
+            potreb_prices=potreb_prices
+        ) or {},
+        axis=1
+    )
+
+    results_df = pd.DataFrame(results.tolist())
+
+    return pd.concat([df_input.reset_index(drop=True), results_df], axis=1)
+
 
 
 

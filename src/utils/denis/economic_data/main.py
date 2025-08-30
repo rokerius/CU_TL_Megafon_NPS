@@ -1,6 +1,6 @@
 import pandas as pd
 import numpy as np
-
+from reader import df_households
 from parser import create_household_params
 
 
@@ -9,7 +9,7 @@ df_input = pd.DataFrame({
     "month": [2, 6, 1]
 })
 
-df_result = create_household_params(df_input)
+df_result = create_household_params(df_input, df_households)
 
 
 def main():
