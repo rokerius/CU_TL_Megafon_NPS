@@ -5,15 +5,15 @@ import joblib
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
 from sklearn.model_selection import train_test_split
+import mlflow
+import mlflow.sklearn
 
 from airflow import DAG
 from airflow.operators.python import PythonOperator
-
 import boto3
 
-
 S3_BUCKET = "cu-mf-project"
-FEATURES_PATH = f"s3://{S3_BUCKET}/features/df_with_features_1.csv"
+FEATURES_PATH = f"s3://{S3_BUCKET}/features/train.csv"
 LOCAL_FEATURES_PATH = "/tmp/df_with_features.csv"
 MODEL_OUTPUT_PATH = "data/model/random_forest.pkl"
 S3_MODEL_KEY = "models/random_forest.pkl"   # <- куда положим модель в S3
@@ -21,6 +21,7 @@ S3_MODEL_KEY = "models/random_forest.pkl"   # <- куда положим мод�
 
 def get_s3_client():
     """Создаём клиент S3 для Yandex Object Storage."""
+    
     session = boto3.session.Session()
     return session.client(
         service_name="s3",
@@ -41,16 +42,48 @@ def download_from_s3():
 
 
 def train_and_save_model():
-    """Обучаем RandomForest, сохраняем модель локально и в S3."""
+    """Обучаем RandomForest, логируем в MLflow, сохраняем модель локально и в S3."""
     df = pd.read_csv(LOCAL_FEATURES_PATH)
 
     feature_cols = [col for col in df.columns if col not in ["start_date", "year", "month", "nps", "state"]]
     X = df[feature_cols]
     y = df["nps"]
 
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=239)
+
     model = RandomForestRegressor(n_estimators=100, random_state=239)
 
-    model.fit(X, y)
+    # # Настройка MLflow
+    # mlflow.set_tracking_uri("http://mlflow:5001")
+    # mlflow.set_experiment("random_forest_experiments")
+
+    with mlflow.start_run(run_name="random_forest_training"):
+        model.fit(X_train, y_train)
+
+        # Предсказания
+        y_pred = model.predict(X_test)
+
+        # Метрики
+        mse = mean_squared_error(y_test, y_pred)
+        mae = mean_absolute_error(y_test, y_pred)
+        r2 = r2_score(y_test, y_pred)
+
+        # # Логируем параметры
+        # mlflow.log_param("n_estimators", 100)
+        # mlflow.log_param("random_state", 239)
+
+        # # Логируем метрики
+        # mlflow.log_metric("mse", mse)
+        # mlflow.log_metric("mae", mae)
+        # mlflow.log_metric("r2", r2)
+
+        # # Логируем модель
+        # mlflow.sklearn.log_model(
+        #     model,
+        #     artifact_path="model",
+        #     registered_model_name=None,
+        #     await_registration_for=0,
+        # )
 
     # Сохраняем локально
     os.makedirs(os.path.dirname(MODEL_OUTPUT_PATH), exist_ok=True)
@@ -60,6 +93,8 @@ def train_and_save_model():
     s3 = get_s3_client()
     s3.upload_file(MODEL_OUTPUT_PATH, S3_BUCKET, S3_MODEL_KEY)
     print(f"Модель сохранена в S3: s3://{S3_BUCKET}/{S3_MODEL_KEY}")
+
+
 
 
 with DAG(

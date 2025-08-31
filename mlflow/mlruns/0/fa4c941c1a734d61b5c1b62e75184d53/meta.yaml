@@ -1,0 +1,14 @@
+artifact_uri: s3://megafon-nps/0/fa4c941c1a734d61b5c1b62e75184d53/artifacts
+end_time: 1756639106628
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: fa4c941c1a734d61b5c1b62e75184d53
+run_name: treasured-midge-907
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1756639077023
+status: 3
+tags: []
+user_id: airflow

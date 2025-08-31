@@ -63,8 +63,8 @@ default_args = {
 
 with DAG(
     dag_id='s3_train_test_split',
+    description='DAG, который скачивает данные из S3, делит на train/test и загружает обратно в S3',
     default_args=default_args,
-    start_date=datetime(2025, 1, 1),
     catchup=False,
 ) as dag:
 

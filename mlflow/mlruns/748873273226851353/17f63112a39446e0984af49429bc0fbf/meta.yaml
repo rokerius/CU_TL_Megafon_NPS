@@ -1,0 +1,14 @@
+artifact_uri: s3://cu-mf-project/748873273226851353/17f63112a39446e0984af49429bc0fbf/artifacts
+end_time: 1756649837497
+entry_point_name: ''
+experiment_id: '748873273226851353'
+lifecycle_stage: active
+run_id: 17f63112a39446e0984af49429bc0fbf
+run_name: capricious-bee-175
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1756649784577
+status: 3
+tags: []
+user_id: airflow

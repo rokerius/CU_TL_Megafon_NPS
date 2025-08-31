@@ -5,17 +5,16 @@ import pendulum
 import boto3
 import os
 from airflow.decorators import dag, task
+from airflow.models import Variable
 
-BUCKET = "cu-mf-project"
-LOCAL_PATH = "/opt/airflow/data/target.xlsx"
-S3_KEY = "raw/target.xlsx"
+BUCKET = Variable.get("s3_bucket", "cu-mf-project")
+LOCAL_PATH = Variable.get("local_xlsx_path", "/opt/airflow/data/target.xlsx")
+S3_KEY = Variable.get("s3_xlsx_path", "raw/target.xlsx")
 
 
 @dag(
     dag_id="D_upload_excel_to_s3",
     description="Загружает локальный Excel-файл в S3 (Yandex Object Storage)",
-    start_date=pendulum.datetime(2024, 1, 1, tz="UTC"),
-    schedule=None,  # запуск вручную
     catchup=False,
     tags=["upload", "s3", "excel"],
 )

@@ -1,0 +1,14 @@
+artifact_uri: s3://cu-mf-project/472610743200043994/cb28f79e3474463abc88e8907d188009/artifacts
+end_time: 1756648575401
+entry_point_name: ''
+experiment_id: '472610743200043994'
+lifecycle_stage: active
+run_id: cb28f79e3474463abc88e8907d188009
+run_name: sneaky-snake-123
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1756648526728
+status: 3
+tags: []
+user_id: airflow

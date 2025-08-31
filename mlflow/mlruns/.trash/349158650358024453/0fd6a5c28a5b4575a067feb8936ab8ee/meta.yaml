@@ -1,0 +1,15 @@
+artifact_uri: s3://cu-mf-project/349158650358024453/0fd6a5c28a5b4575a067feb8936ab8ee/artifacts
+deleted_time: 1756648669067
+end_time: 1756645912011
+entry_point_name: ''
+experiment_id: '349158650358024453'
+lifecycle_stage: deleted
+run_id: 0fd6a5c28a5b4575a067feb8936ab8ee
+run_name: random_forest_training
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1756645830193
+status: 4
+tags: []
+user_id: airflow

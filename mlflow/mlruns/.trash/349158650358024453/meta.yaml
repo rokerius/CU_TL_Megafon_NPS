@@ -1,0 +1,7 @@
+artifact_location: s3://cu-mf-project/349158650358024453
+creation_time: 1756645526816
+experiment_id: '349158650358024453'
+last_update_time: 1756648669067
+lifecycle_stage: deleted
+name: random_forest_experiments
+tags: {}

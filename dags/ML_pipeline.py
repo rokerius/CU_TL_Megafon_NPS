@@ -30,9 +30,9 @@ MLFLOW_S3_ENDPOINT = Variable.get("mlflow_s3_endpoint", "https://storage.yandexc
 default_args = {"owner": "airflow", "depends_on_past": False}
 
 dag = DAG(
-    "mlflow_model_evaluation_regression",
+    "model_evaluation_regression",
     default_args=default_args,
-    description="DAG for regression model evaluation and MLflow logging",
+    description="DAG, который берет твою модель из S3, делает предсказания на тестовом наборе и логирует результаты в MLflow",
     catchup=False,
 )
 
@@ -71,36 +71,56 @@ def load_model():
 
 @task(dag=dag)
 def predict_and_log(paths: dict, model_path: str):
-    # Загружаем модель (только joblib)
     model = joblib.load(model_path)
 
     results = {}
-    for split_name, path in paths.items():
-        df = pd.read_csv(path)
-
-        feature_cols = [col for col in df.columns if col not in ["start_date", "year", "month", "nps", "state"]]
-        X = df[feature_cols]
-        y = df["nps"]
-
-        y_pred = model.predict(X)
-
-        rmse = np.sqrt(mean_squared_error(y, y_pred))
-        mae = mean_absolute_error(y, y_pred)
-        r2 = r2_score(y, y_pred)
-
-        print(f"[{split_name.upper()}] RMSE: {rmse}, MAE: {mae}, R2: {r2}")
-        results[split_name] = {"rmse": rmse, "mae": mae, "r2": r2}
-
-    # MLflow logging
-    mlflow.set_tracking_uri("http://mlflow:5001")  # можно вынести в Variable
+    datasets_info = {}
+    mlflow.set_tracking_uri(os.getenv("MLFLOW_TRACKING_URI", "http://mlflow:5001"))
     mlflow.set_experiment(MLFLOW_EXPERIMENT)
-
     os.environ["MLFLOW_S3_ENDPOINT_URL"] = MLFLOW_S3_ENDPOINT
 
     with mlflow.start_run():
-        for split, metrics in results.items():
-            for name, value in metrics.items():
-                mlflow.log_metric(f"{split}_{name}", value)
+        for split_name, path in paths.items():
+            df = pd.read_csv(path)
+
+            feature_cols = [col for col in df.columns if col not in ["start_date", "year", "month", "nps", "state"]]
+            X = df[feature_cols]
+            y = df["nps"]
+
+            y_pred = model.predict(X)
+
+            rmse = np.sqrt(mean_squared_error(y, y_pred))
+            mae = mean_absolute_error(y, y_pred)
+            r2 = r2_score(y, y_pred)
+
+            print(f"[{split_name.upper()}] RMSE: {rmse}, MAE: {mae}, R2: {r2}")
+            results[split_name] = {"rmse": rmse, "mae": mae, "r2": r2}
+            datasets_info[split_name] = {"rows": len(df), "features": len(feature_cols)}
+
+            mlflow.log_metric(f"{split_name}_rmse", rmse)
+            mlflow.log_metric(f"{split_name}_mae", mae)
+            mlflow.log_metric(f"{split_name}_r2", r2)
+
+            mlflow.log_param(f"{split_name}_rows", len(df))
+            mlflow.log_param(f"{split_name}_features", len(feature_cols))
+
+            sample_preds = pd.DataFrame({
+                "y_true": y[:10].values,
+                "y_pred": y_pred[:10]
+            })
+            mlflow.log_text(
+                sample_preds.to_csv(index=False),
+                artifact_file=f"{split_name}_examples/sample_predictions.csv"
+            )
+
+            mlflow.log_text(
+                df.to_csv(index=False),
+                artifact_file=f"{split_name}_data/{split_name}_dataset.csv"
+            )
+
+        if hasattr(model, "get_params"):
+            mlflow.log_params(model.get_params())
+
         mlflow.sklearn.log_model(model, artifact_path="model")
 
     return results
