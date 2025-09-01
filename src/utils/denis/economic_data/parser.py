@@ -91,6 +91,14 @@ def create_potreb_prices_params(df_input, potreb_prices):
     return pd.concat([df_input.reset_index(drop=True), results_df], axis=1)
 
 
+def create_key_rate_params(df: pd.DataFrame, ref_df: pd.DataFrame) -> pd.DataFrame:
+    df = df.copy()
+    df["Дата"] = df["month"].apply(lambda x: f"{int(x):02d}") + "." + df["year"].astype(str)
+    df["Дата"] = df["Дата"].astype(str)
+    ref_df["Дата"] = ref_df["Дата"].astype(str)
+    merged = df.merge(ref_df, on="Дата", how="left")
+    merged.drop(columns=["Дата"], inplace=True)
+    return merged
 
 
 def main():

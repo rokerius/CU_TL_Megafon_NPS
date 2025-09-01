@@ -43,10 +43,13 @@ def create_potreb_prices_dfs(path: str):
     df = pd.read_excel(path, sheet_name="01(2025)", skiprows=6)
     potreb_prices["1/2025"] = prepare_potreb_prices_data(df)
     return potreb_prices
+
+
     
     
 df_households = prepare_househols_data(pd.read_excel("data/households_b_3.xlsx", "Балансы")) 
 potreb_prices = create_potreb_prices_dfs("data/potreb_prices.xlsx")
+key_rate_data = pd.read_excel("data/key_rate.xlsx")
 
 
 def main():
