@@ -1,0 +1,14 @@
+artifact_uri: s3://cu-mf-project/472610743200043994/d7aadab0f696494a8ab1f1ac7e978a9c/artifacts
+end_time: 1756765102504
+entry_point_name: ''
+experiment_id: '472610743200043994'
+lifecycle_stage: active
+run_id: d7aadab0f696494a8ab1f1ac7e978a9c
+run_name: clumsy-stag-5
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1756765048390
+status: 3
+tags: []
+user_id: airflow

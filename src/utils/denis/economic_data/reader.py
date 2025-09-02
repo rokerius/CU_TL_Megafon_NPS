@@ -45,11 +45,17 @@ def create_potreb_prices_dfs(path: str):
     return potreb_prices
 
 
-    
+def prepare_exchange_rates_data(df):
+    df["data"] = pd.to_datetime(df["data"])
+    df["year_month"] = df["data"].dt.to_period("M")
+    monthly_avg = df.groupby("year_month")[["USD", "YEN", "EUR", "CNY"]].mean().reset_index()
+    return monthly_avg
+
     
 df_households = prepare_househols_data(pd.read_excel("data/households_b_3.xlsx", "Балансы")) 
 potreb_prices = create_potreb_prices_dfs("data/potreb_prices.xlsx")
 key_rate_data = pd.read_excel("data/key_rate.xlsx")
+exchange_rates_data = prepare_exchange_rates_data(pd.read_excel("data/exchange_rates.xlsx"))
 
 
 def main():

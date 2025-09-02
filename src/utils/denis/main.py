@@ -1,13 +1,14 @@
 import pandas as pd
-from src.utils.denis.economic_data.parser import create_household_params_fast, create_potreb_prices_params, create_key_rate_params
+from src.utils.denis.economic_data.parser import create_household_params_fast, create_potreb_prices_params, create_key_rate_params, create_exchange_features
 from src.utils.denis.weather_data.main import create_new_weather_columns
-from src.utils.denis.economic_data.reader import df_households, potreb_prices, key_rate_data
+from src.utils.denis.economic_data.reader import df_households, potreb_prices, key_rate_data, exchange_rates_data
 
 
 def prepare_data(df_input, weather_cache_path='cache/weather_cache.pkl'):
     df_input = create_household_params_fast(df_input, df_households)
     df_input = create_potreb_prices_params(df_input, potreb_prices)
     df_input = create_key_rate_params(df_input, key_rate_data)
+    df_input = create_exchange_features(df_input, exchange_rates_data)
     print("economic data added!")
     df_result = create_new_weather_columns(df_input, cache_path=weather_cache_path)
     print("weather data added!")

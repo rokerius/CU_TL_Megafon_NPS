@@ -101,6 +101,17 @@ def create_key_rate_params(df: pd.DataFrame, ref_df: pd.DataFrame) -> pd.DataFra
     return merged
 
 
+def create_exchange_features(df, exchange_rates_data):
+    df = df.copy()
+    df["year_month"] = df["year"].astype(str) + "." + df["month"].astype(str).str.zfill(2)
+    exchange_rates_data = exchange_rates_data.copy()
+    exchange_rates_data["year_month"] = exchange_rates_data["year_month"].astype(str)
+    df = df.merge(exchange_rates_data, on="year_month", how="left")
+
+    return df
+
+
+
 def main():
     df_input = pd.DataFrame({
         "year": [2020, 2018, 2025],
