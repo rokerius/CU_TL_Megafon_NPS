@@ -1,0 +1,14 @@
+artifact_uri: s3://megafon-nps/0/4143b82ff4d8498d8ea2e7fb0cad80d5/artifacts
+end_time: null
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: 4143b82ff4d8498d8ea2e7fb0cad80d5
+run_name: random_forest_training
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1756831845063
+status: 1
+tags: []
+user_id: airflow

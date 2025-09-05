@@ -93,7 +93,7 @@ def create_potreb_prices_params(df_input, potreb_prices):
 
 def create_key_rate_params(df: pd.DataFrame, ref_df: pd.DataFrame) -> pd.DataFrame:
     df = df.copy()
-    df["Дата"] = df["month"].apply(lambda x: f"{int(x):02d}") + "." + df["year"].astype(str)
+    df["Дата"] = df["month"].astype(str) + "." + df["year"].astype(str)
     df["Дата"] = df["Дата"].astype(str)
     ref_df["Дата"] = ref_df["Дата"].astype(str)
     merged = df.merge(ref_df, on="Дата", how="left")
@@ -103,10 +103,11 @@ def create_key_rate_params(df: pd.DataFrame, ref_df: pd.DataFrame) -> pd.DataFra
 
 def create_exchange_features(df, exchange_rates_data):
     df = df.copy()
-    df["year_month"] = df["year"].astype(str) + "." + df["month"].astype(str).str.zfill(2)
+    df["year_month"] = df["year"].astype(str) + "-" + df["month"].astype(str).str.zfill(2)
     exchange_rates_data = exchange_rates_data.copy()
     exchange_rates_data["year_month"] = exchange_rates_data["year_month"].astype(str)
     df = df.merge(exchange_rates_data, on="year_month", how="left")
+    df.drop(columns=["year_month"], inplace=True)
 
     return df
 

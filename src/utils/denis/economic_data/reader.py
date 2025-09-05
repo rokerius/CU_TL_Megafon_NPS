@@ -1,4 +1,8 @@
 import pandas as pd
+import os
+
+PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../../../"))
+DATA_DIR = os.path.join(PROJECT_ROOT, "data")
 
 
 def prepare_househols_data(df):
@@ -52,10 +56,11 @@ def prepare_exchange_rates_data(df):
     return monthly_avg
 
     
-df_households = prepare_househols_data(pd.read_excel("data/households_b_3.xlsx", "Балансы")) 
-potreb_prices = create_potreb_prices_dfs("data/potreb_prices.xlsx")
-key_rate_data = pd.read_excel("data/key_rate.xlsx")
-exchange_rates_data = prepare_exchange_rates_data(pd.read_excel("data/exchange_rates.xlsx"))
+df_households = prepare_househols_data(pd.read_excel(os.path.join(DATA_DIR, "households_b_3.xlsx"), "Балансы"))
+potreb_prices = create_potreb_prices_dfs(os.path.join(DATA_DIR, "potreb_prices.xlsx"))
+key_rate_data = pd.read_excel(os.path.join(DATA_DIR, "key_rate.xlsx"))
+exchange_rates_data = prepare_exchange_rates_data(pd.read_excel(os.path.join(DATA_DIR, "exchange_rates.xlsx")))
+print("Economic data loaded!")
 
 
 def main():

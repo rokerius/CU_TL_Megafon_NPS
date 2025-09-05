@@ -3,19 +3,36 @@ from src.utils.denis.economic_data.parser import create_household_params_fast, c
 from src.utils.denis.weather_data.main import create_new_weather_columns
 from src.utils.denis.economic_data.reader import df_households, potreb_prices, key_rate_data, exchange_rates_data
 
+data_dict = {
+    "households": df_households,
+    "potreb_prices": potreb_prices,
+    "key_rate_data": key_rate_data,
+    "exchange_rates_data": exchange_rates_data
+}
 
-def prepare_data(df_input, weather_cache_path='cache/weather_cache.pkl'):
-    df_input = create_household_params_fast(df_input, df_households)
-    df_input = create_potreb_prices_params(df_input, potreb_prices)
-    df_input = create_key_rate_params(df_input, key_rate_data)
-    df_input = create_exchange_features(df_input, exchange_rates_data)
+
+def prepare_data(df_input, weather_cache_path='cache/weather_cache.pkl', data_dict=data_dict):
+    df_input = create_household_params_fast(df_input, data_dict["households"])
+    df_input = create_potreb_prices_params(df_input, data_dict["potreb_prices"])
+    df_input = create_key_rate_params(df_input, data_dict["key_rate_data"])
+    df_input = create_exchange_features(df_input, data_dict["exchange_rates_data"])
     print("economic data added!")
     df_result = create_new_weather_columns(df_input, cache_path=weather_cache_path)
     print("weather data added!")
     
+    
     # СЮДА ВСТАВЛЯТЬ ОБРАБОТКУ ДАННЫХ!!!
     
-    return df_result
+    
+    null_cols = df_result.columns[df_result.isnull().any()]
+    print("Столбцы с пропусками:", null_cols.tolist())
+
+    df_result = df_result.drop(null_cols.tolist(), axis=1)
+    print("Оставшиеся столбцы:", df_result.columns.tolist())
+    
+    df_result_encoded = pd.get_dummies(df_result, columns=['state'])
+    
+    return df_result_encoded
 
 def main():
     df_input = pd.DataFrame({
