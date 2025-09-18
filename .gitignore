@@ -27,3 +27,5 @@ vlad/config/.env
 
 # Data files (если есть, можно исключить большие датасеты)
 .examps
+.DS_Store
+.cache_macros
