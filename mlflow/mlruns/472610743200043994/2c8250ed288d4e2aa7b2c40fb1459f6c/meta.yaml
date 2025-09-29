@@ -1,0 +1,14 @@
+artifact_uri: s3://cu-mf-project/472610743200043994/2c8250ed288d4e2aa7b2c40fb1459f6c/artifacts
+end_time: 1756645181676
+entry_point_name: ''
+experiment_id: '472610743200043994'
+lifecycle_stage: active
+run_id: 2c8250ed288d4e2aa7b2c40fb1459f6c
+run_name: learned-quail-818
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1756645180410
+status: 4
+tags: []
+user_id: airflow

@@ -1,0 +1,14 @@
+artifact_uri: s3://cu-mf-project/472610743200043994/eb43488099e24a67a6e149bea18b0e57/artifacts
+end_time: 1756651682202
+entry_point_name: ''
+experiment_id: '472610743200043994'
+lifecycle_stage: active
+run_id: eb43488099e24a67a6e149bea18b0e57
+run_name: painted-auk-976
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1756651626506
+status: 3
+tags: []
+user_id: airflow

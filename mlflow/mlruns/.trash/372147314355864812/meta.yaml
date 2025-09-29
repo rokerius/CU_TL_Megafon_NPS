@@ -1,0 +1,7 @@
+artifact_location: s3://megafon-nps/372147314355864812
+creation_time: 1754188463866
+experiment_id: '372147314355864812'
+last_update_time: 1756648669069
+lifecycle_stage: deleted
+name: airflow_test
+tags: {}

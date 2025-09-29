@@ -1,0 +1,14 @@
+artifact_uri: s3://megafon-nps/0/65de3fb0f23346599e5f74d34b3e7064/artifacts
+end_time: 1756639293562
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: 65de3fb0f23346599e5f74d34b3e7064
+run_name: blushing-colt-929
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1756639277820
+status: 3
+tags: []
+user_id: airflow

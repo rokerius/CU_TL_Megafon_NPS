@@ -1,0 +1,14 @@
+artifact_uri: s3://cu-mf-project/748873273226851353/4bfb5566f3ce4a02bb92c042caa23a8b/artifacts
+end_time: 1756650111484
+entry_point_name: ''
+experiment_id: '748873273226851353'
+lifecycle_stage: active
+run_id: 4bfb5566f3ce4a02bb92c042caa23a8b
+run_name: bald-hare-276
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1756650027788
+status: 3
+tags: []
+user_id: airflow

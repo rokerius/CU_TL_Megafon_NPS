@@ -1,0 +1,14 @@
+artifact_uri: s3://cu-mf-project/472610743200043994/46104416bb7945219a4b5724ed88916b/artifacts
+end_time: 1756077932492
+entry_point_name: ''
+experiment_id: '472610743200043994'
+lifecycle_stage: active
+run_id: 46104416bb7945219a4b5724ed88916b
+run_name: rumbling-finch-172
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1756077894444
+status: 4
+tags: []
+user_id: airflow

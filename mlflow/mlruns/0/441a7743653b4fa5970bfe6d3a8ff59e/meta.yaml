@@ -1,0 +1,14 @@
+artifact_uri: s3://megafon-nps/0/441a7743653b4fa5970bfe6d3a8ff59e/artifacts
+end_time: 1755776863733
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: 441a7743653b4fa5970bfe6d3a8ff59e
+run_name: linear_regression_nps
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1755776862452
+status: 4
+tags: []
+user_id: airflow

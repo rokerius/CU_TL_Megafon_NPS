@@ -1,0 +1,6 @@
+artifact_location: s3://cu-mf-project/748873273226851353
+creation_time: 1756649784455
+experiment_id: '748873273226851353'
+last_update_time: 1756649784455
+lifecycle_stage: active
+name: default_ml_pipeline

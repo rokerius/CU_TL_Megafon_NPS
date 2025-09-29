@@ -1,0 +1,14 @@
+artifact_uri: s3://cu-mf-project/472610743200043994/0b99e72adf49454eb8ae5c00f8f91672/artifacts
+end_time: 1756641419991
+entry_point_name: ''
+experiment_id: '472610743200043994'
+lifecycle_stage: active
+run_id: 0b99e72adf49454eb8ae5c00f8f91672
+run_name: nervous-goat-197
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1756641393643
+status: 3
+tags: []
+user_id: airflow

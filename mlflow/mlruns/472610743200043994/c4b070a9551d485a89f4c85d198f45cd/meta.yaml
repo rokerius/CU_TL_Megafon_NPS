@@ -1,0 +1,14 @@
+artifact_uri: s3://cu-mf-project/472610743200043994/c4b070a9551d485a89f4c85d198f45cd/artifacts
+end_time: 1756639761024
+entry_point_name: ''
+experiment_id: '472610743200043994'
+lifecycle_stage: active
+run_id: c4b070a9551d485a89f4c85d198f45cd
+run_name: unleashed-shark-311
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1756639732616
+status: 3
+tags: []
+user_id: airflow

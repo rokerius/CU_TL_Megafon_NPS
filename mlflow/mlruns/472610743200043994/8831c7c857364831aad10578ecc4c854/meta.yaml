@@ -1,0 +1,14 @@
+artifact_uri: s3://cu-mf-project/472610743200043994/8831c7c857364831aad10578ecc4c854/artifacts
+end_time: 1756643893551
+entry_point_name: ''
+experiment_id: '472610743200043994'
+lifecycle_stage: active
+run_id: 8831c7c857364831aad10578ecc4c854
+run_name: charming-newt-171
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1756643870572
+status: 3
+tags: []
+user_id: airflow

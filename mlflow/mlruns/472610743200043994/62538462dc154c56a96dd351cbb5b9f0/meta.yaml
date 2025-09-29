@@ -1,0 +1,14 @@
+artifact_uri: s3://cu-mf-project/472610743200043994/62538462dc154c56a96dd351cbb5b9f0/artifacts
+end_time: 1757076216824
+entry_point_name: ''
+experiment_id: '472610743200043994'
+lifecycle_stage: active
+run_id: 62538462dc154c56a96dd351cbb5b9f0
+run_name: defiant-crab-122
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1757076184530
+status: 3
+tags: []
+user_id: airflow

@@ -1,0 +1,7 @@
+artifact_location: s3://megafon-nps/223664903290630971
+creation_time: 1755779360306
+experiment_id: '223664903290630971'
+last_update_time: 1756648669074
+lifecycle_stage: deleted
+name: feature_engineering_pg
+tags: {}

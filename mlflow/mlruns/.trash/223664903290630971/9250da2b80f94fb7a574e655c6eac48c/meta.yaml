@@ -1,0 +1,15 @@
+artifact_uri: s3://megafon-nps/223664903290630971/9250da2b80f94fb7a574e655c6eac48c/artifacts
+deleted_time: 1756648669074
+end_time: 1755779363569
+entry_point_name: ''
+experiment_id: '223664903290630971'
+lifecycle_stage: deleted
+run_id: 9250da2b80f94fb7a574e655c6eac48c
+run_name: linear_regression_nps
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1755779360716
+status: 4
+tags: []
+user_id: airflow

@@ -1,0 +1,14 @@
+artifact_uri: s3://cu-mf-project/472610743200043994/e3abc2f55f094725b557cbcb021a7256/artifacts
+end_time: 1756645463103
+entry_point_name: ''
+experiment_id: '472610743200043994'
+lifecycle_stage: active
+run_id: e3abc2f55f094725b557cbcb021a7256
+run_name: defiant-tern-734
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1756645462882
+status: 4
+tags: []
+user_id: airflow
